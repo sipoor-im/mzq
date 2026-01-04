@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html,
 body,
 #root {
@@ -13,4 +17,23 @@ main {
   justify-content: center;
   height: 100%;
   width: 100%;
+}
+
+img {
+  display: block;
+  cursor: pointer;
+}
+
+.tile {
+  opacity: 0.4;
+  transition: all 1s;
+}
+
+/* #grid:hover .tile {
+  opacity: .6;
+} */
+
+.tile:hover {
+  opacity: .9;
+  transform: scale(1.2);
 }
