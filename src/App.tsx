@@ -37,7 +37,7 @@ export default function App() {
 
   function onClick(i: number) {
     setClicked(i)
-    const r = Math.round(i / n.current)
+    const r = Math.floor(i / n.current)
     const c = i % n.current
     console.log({ i, r, c, n: n.current })
     gsap.to(mzq.current, {
@@ -45,7 +45,17 @@ export default function App() {
       y: `${-r * 100}%`,
       scale: 1,
       duration: 2,
-      ease: "power2.inOut"
+      onComplete: () => {
+        requestAnimationFrame(() => {
+          setCurrent(tiles[i])
+          setClicked(-1)
+          gsap.set(mzq.current, {
+            x: '0%',
+            y: '0%',
+            scale: 1 / n.current,
+          })
+        })
+      }
     })
   }
 
