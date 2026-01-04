@@ -17,7 +17,7 @@ export default function Mozyq({ main, children, ref }: Props) {
             transform: `scale(${1 / n})`
         }}
     >
-        <img className="main" src={`normalized/${main}`} style={{
+        <img className="main" src={`normalized/${main}.jpg`} style={{
             transformOrigin: 'top left',
             transform: `scale(${n})`
         }} />

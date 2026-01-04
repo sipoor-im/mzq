@@ -17,6 +17,7 @@ main {
   justify-content: center;
   height: 100%;
   width: 100%;
+  background: linear-gradient(135deg, #222 0%, #444 100%);
 }
 
 img {
@@ -41,10 +42,10 @@ img {
 }
 
 .tile {
-  opacity: .45;
-  transition: all 1s;
+  opacity: .5;
+  transition: all .7s;
 }
 
 .tile:hover {
-  opacity: .7;
+  opacity: .9;
 }

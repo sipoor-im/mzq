@@ -44,7 +44,8 @@ export default function App() {
       x: `${-c * 100}%`,
       y: `${-r * 100}%`,
       scale: 1,
-      duration: 2,
+      duration: 4,
+      ease: "power2.in",
       onComplete: () => {
         requestAnimationFrame(() => {
           setCurrent(tiles[i])
@@ -62,8 +63,7 @@ export default function App() {
   if (prog < 100) return <main>Loading... {prog.toFixed(2)}%</main>
 
   return <main>
-    {tiles.length}
-    <div style={{ border: '1px solid red', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', overflow: 'hidden' }}>
       <Mozyq ref={mzq} main={current!} >
         {
           tiles.map((name, i) =>
@@ -75,7 +75,7 @@ export default function App() {
                     <img
                       key={ii}
                       className="tile"
-                      src={`normalized/${tt}`}
+                      src={`normalized/${tt}.jpg`}
                       alt=""
                     />
                   )
@@ -85,7 +85,7 @@ export default function App() {
               : <img
                 key={i}
                 className="tile"
-                src={`normalized/${name}`}
+                src={`normalized/${name}.jpg`}
                 onClick={() => onClick(i)}
               />
           )}
