@@ -24,16 +24,28 @@ img {
   cursor: pointer;
 }
 
+.mozyq {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.grid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: grid;
+  transform-origin: top left;
+}
+
 .tile {
-  opacity: 0.4;
+  opacity: .3;
   transition: all 1s;
 }
 
-/* #grid:hover .tile {
-  opacity: .6;
-} */
-
 .tile:hover {
   opacity: .9;
-  transform: scale(1.2);
 }

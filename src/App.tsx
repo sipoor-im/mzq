@@ -1,87 +1,72 @@
-import gsap from "gsap"
 import ky from "ky"
 import { useEffect, useRef, useState } from "react"
+import Mozyq from "./Mozyq"
 
 export default function App() {
   const [prog, setProg] = useState(0)
-  const [data, setData] = useState<{ [key: string]: string[] }>()
+
   const [current, setCurrent] = useState<string>()
   const [tiles, setTiles] = useState<string[]>([])
-  const [n, setN] = useState(0)
+  const [clicked, setClicked] = useState<number>(-1)
 
-  const grid = useRef<HTMLDivElement>(null)
+  const data = useRef<{ [key: string]: string[] }>(null)
+  const n = useRef<number>(-1)
 
   useEffect(() => {
     ky.get('/output.json', {
       onDownloadProgress: (progress) => {
         setProg(progress.percent * 100)
       }
-    }).json().then((data) => {
-      setData(data as any)
-      setCurrent(Object.keys(data as any)[0])
+    }).json().then((d) => {
+      data.current = d as any
+      const k = Object.keys(d as any)[0]
+      n.current = Math.round(Math.sqrt((d as any)[k].length))
+      setCurrent(k)
     })
   }, [])
 
   useEffect(() => {
     if (current === undefined) return
-    const tiles = data![current]
+    const tiles = data.current![current]
     setTiles(tiles)
-    setN(Math.round(Math.sqrt(tiles.length)))
   }, [current])
 
-  function isData(data: any): data is { [key: string]: string[] } {
-    return data && typeof data === 'object'
+
+  function onClick(name: string, i: number) {
+    console.log("CLICK", name, i)
+    setClicked(i)
   }
 
-  function onClick(i: number) {
-    // setCurrent(tiles[i])
-    const r = Math.floor(i / n)
-    const c = i % n
-    gsap.to(grid.current, {
-      scale: 1,
-      translateX: `-${c * 100}%`,
-      translateY: `-${r * 100}%`,
-      duration: 3,
-      onComplete: () => {
-        setCurrent(tiles[i])
-        gsap.set(grid.current, {
-          scale: 1 / n,
-          translateX: '0%',
-          translateY: '0%',
-        })
-      }
-    })
-  }
-
-  if (!isData(data)) return <main>Loading... {prog.toFixed(2)}%</main>
-
+  if (prog < 100) return <main>Loading... {prog.toFixed(2)}%</main>
 
   return <main>
+    <h1>{clicked}</h1>
     <div style={{ border: '1px solid red', position: 'relative', overflow: 'hidden' }}>
-      <img src={`normalized/${current}`} alt="" />
-      <div id='grid' ref={grid} style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        top: 0,
-        left: 0,
-        border: '1px solid blue',
-        display: 'grid',
-        gridTemplateColumns: `repeat(${n}, 1fr)`,
-        gridTemplateRows: `repeat(${n}, 1fr)`,
-        transformOrigin: 'top left',
-        transform: `scale(${1 / n})`,
-      }}>
+      <Mozyq main={current!} >
         {
-          tiles!.map((name, i) =>
-            <img
-              key={name}
-              className="tile"
-              src={`normalized/${name}`}
-              onClick={() => onClick(i)} />
-          )
-        }
-      </div>
+          tiles.map((name, i) =>
+            i === clicked
+              // MOZYQ
+              ? <Mozyq key={i} main={name} >
+                {
+                  data.current![name].map((tt, ii) =>
+                    <img
+                      key={ii}
+                      className="tile"
+                      src={`normalized/${tt}`}
+                      alt=""
+                    />
+                  )
+                }
+              </Mozyq>
+
+              : <img
+                key={i}
+                className="tile"
+                src={`normalized/${name}`}
+                onClick={() => onClick(name, i)} />
+          )}
+      </Mozyq>
     </div>
   </main>
 }
