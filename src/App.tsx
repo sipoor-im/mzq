@@ -1,3 +1,4 @@
+import gsap from "gsap"
 import ky from "ky"
 import { useEffect, useRef, useState } from "react"
 import Mozyq from "./Mozyq"
@@ -9,6 +10,7 @@ export default function App() {
   const [tiles, setTiles] = useState<string[]>([])
   const [clicked, setClicked] = useState<number>(-1)
 
+  const mzq = useRef<HTMLDivElement>(null)
   const data = useRef<{ [key: string]: string[] }>(null)
   const n = useRef<number>(-1)
 
@@ -19,8 +21,9 @@ export default function App() {
       }
     }).json().then((d) => {
       data.current = d as any
-      const k = Object.keys(d as any)[0]
-      n.current = Math.round(Math.sqrt((d as any)[k].length))
+      const ts = Object.keys(d as any)
+      const k = ts[0]
+      n.current = Math.round(Math.sqrt(data.current![k].length))
       setCurrent(k)
     })
   }, [])
@@ -32,17 +35,25 @@ export default function App() {
   }, [current])
 
 
-  function onClick(name: string, i: number) {
-    console.log("CLICK", name, i)
+  function onClick(i: number) {
     setClicked(i)
+    const r = Math.round(i / n.current)
+    const c = i % n.current
+    console.log({ i, r, c, n: n.current })
+    gsap.to(mzq.current, {
+      x: `${-c * 100}%`,
+      y: `${-r * 100}%`,
+      scale: 1,
+      duration: 2,
+      ease: "power2.inOut"
+    })
   }
 
   if (prog < 100) return <main>Loading... {prog.toFixed(2)}%</main>
 
   return <main>
-    <h1>{clicked}</h1>
     <div style={{ border: '1px solid red', position: 'relative', overflow: 'hidden' }}>
-      <Mozyq main={current!} >
+      <Mozyq ref={mzq} main={current!} >
         {
           tiles.map((name, i) =>
             i === clicked
@@ -64,7 +75,8 @@ export default function App() {
                 key={i}
                 className="tile"
                 src={`normalized/${name}`}
-                onClick={() => onClick(name, i)} />
+                onClick={() => onClick(i)}
+              />
           )}
       </Mozyq>
     </div>
