@@ -62,6 +62,7 @@ export default function App() {
   if (prog < 100) return <main>Loading... {prog.toFixed(2)}%</main>
 
   return <main>
+    {tiles.length}
     <div style={{ border: '1px solid red', position: 'relative', overflow: 'hidden' }}>
       <Mozyq ref={mzq} main={current!} >
         {

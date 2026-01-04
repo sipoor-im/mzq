@@ -41,10 +41,10 @@ img {
 }
 
 .tile {
-  opacity: .3;
+  opacity: .45;
   transition: all 1s;
 }
 
 .tile:hover {
-  opacity: .9;
+  opacity: .7;
 }
