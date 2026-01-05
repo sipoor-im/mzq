@@ -15,7 +15,7 @@ export default function App() {
   const n = useRef<number>(-1)
 
   useEffect(() => {
-    ky.get('/mzq/output.json', {
+    ky.get('output.json', {
       onDownloadProgress: (progress) => {
         setProg(progress.percent * 100)
       }
@@ -30,8 +30,7 @@ export default function App() {
 
   useEffect(() => {
     if (current === undefined) return
-    const tiles = data.current![current]
-    setTiles(tiles)
+    setTiles(data.current![current])
     gsap.set(mzq.current, { scale: 1 / n.current, x: '0%', y: '0%' })
   }, [current])
 
