@@ -1,4 +1,5 @@
 node_modules
 normalized
 output.json
+dist
 .vscode

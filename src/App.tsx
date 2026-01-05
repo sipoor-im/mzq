@@ -15,7 +15,7 @@ export default function App() {
   const n = useRef<number>(-1)
 
   useEffect(() => {
-    ky.get('/output.json', {
+    ky.get('/mzq/output.json', {
       onDownloadProgress: (progress) => {
         setProg(progress.percent * 100)
       }
@@ -32,6 +32,7 @@ export default function App() {
     if (current === undefined) return
     const tiles = data.current![current]
     setTiles(tiles)
+    gsap.set(mzq.current, { scale: 1 / n.current, x: '0%', y: '0%' })
   }, [current])
 
 
@@ -47,20 +48,13 @@ export default function App() {
       duration: 4,
       ease: "power2.in",
       onComplete: () => {
-        requestAnimationFrame(() => {
-          setCurrent(tiles[i])
-          setClicked(-1)
-          gsap.set(mzq.current, {
-            x: '0%',
-            y: '0%',
-            scale: 1 / n.current,
-          })
-        })
+        setCurrent(tiles[i])
+        setClicked(-1)
       }
     })
   }
 
-  if (prog < 100) return <main>Loading... {prog.toFixed(2)}%</main>
+  if (prog < 100) return <main style={{ color: 'white' }}>Loading... {prog.toFixed(2)}%</main>
 
   return <main>
     <div style={{ position: 'relative', overflow: 'hidden' }}>
@@ -75,7 +69,7 @@ export default function App() {
                     <img
                       key={ii}
                       className="tile"
-                      src={`normalized/${tt}.jpg`}
+                      src={`normalized/${tt}.avif`}
                       alt=""
                     />
                   )
@@ -85,7 +79,7 @@ export default function App() {
               : <img
                 key={i}
                 className="tile"
-                src={`normalized/${name}.jpg`}
+                src={`normalized/${name}.avif`}
                 onClick={() => onClick(i)}
               />
           )}
