@@ -56,7 +56,11 @@ export default function App() {
   if (prog < 100) return <main style={{ color: 'white' }}>Loading... {prog.toFixed(2)}%</main>
 
   return <main>
-    <div style={{ position: 'relative', overflow: 'hidden' }}>
+    <div style={{
+      position: 'relative',
+      overflow: 'hidden',
+      cursor: clicked === -1 ? 'pointer' : 'wait'
+    }} >
       <Mozyq ref={mzq} main={current!} >
         {
           tiles.map((name, i) =>
@@ -79,7 +83,11 @@ export default function App() {
                 key={i}
                 className="tile"
                 src={`normalized/${name}.avif`}
-                onClick={() => onClick(i)}
+                onClick={
+                  clicked === -1
+                    ? () => onClick(i)
+                    : undefined
+                }
               />
           )}
       </Mozyq>
