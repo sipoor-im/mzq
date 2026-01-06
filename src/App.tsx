@@ -1,4 +1,3 @@
-import gsap from "gsap"
 import ky from "ky"
 import { useEffect, useRef, useState } from "react"
 import Mozyq from "./Mozyq"
@@ -9,8 +8,10 @@ export default function App() {
   const [current, setCurrent] = useState<string>()
   const [tiles, setTiles] = useState<string[]>([])
   const [clicked, setClicked] = useState<number>(-1)
+  const [x, setX] = useState(0)
+  const [y, setY] = useState(0)
+  const [transition, setTransition] = useState(true)
 
-  const mzq = useRef<HTMLDivElement>(null)
   const data = useRef<{ [key: string]: string[] }>(null)
   const n = useRef<number>(-1)
 
@@ -29,9 +30,15 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    if (clicked !== -1) return
+    setX(0)
+    setY(0)
+  }, [clicked])
+
+  useEffect(() => {
     if (current === undefined) return
     setTiles(data.current![current])
-    gsap.set(mzq.current, { scale: 1 / n.current, x: '0%', y: '0%' })
+    setClicked(-1)
   }, [current])
 
 
@@ -39,40 +46,35 @@ export default function App() {
     setClicked(i)
     const r = Math.floor(i / n.current)
     const c = i % n.current
+    setX(c)
+    setY(r)
     console.log({ i, r, c, n: n.current })
-    gsap.to(mzq.current, {
-      x: `${-c * 100}%`,
-      y: `${-r * 100}%`,
-      scale: 1,
-      duration: 4,
-      ease: "power2.in",
-      onComplete: () => {
-        setCurrent(tiles[i])
-        setClicked(-1)
-      }
-    })
+    setTimeout(() => {
+      setTransition(false)
+      setCurrent(tiles[i])
+      setClicked(-1)
+      setTimeout(() => {
+        setTransition(true)
+      }, 100)
+    }, 1_000)
   }
 
   if (prog < 100) return <main style={{ color: 'white' }}>Loading... {prog.toFixed(2)}%</main>
 
   return <main>
-    <div style={{
-      position: 'relative',
-      overflow: 'hidden',
-      cursor: clicked === -1 ? 'pointer' : 'wait'
-    }} >
-      <Mozyq ref={mzq} main={current!} >
+    <div className={["container", clicked === -1 ? '' : 'zooming'].join(' ')}>
+      <Mozyq main={current!} zoom={clicked !== -1} x={x} y={y} transition={transition}>
         {
           tiles.map((name, i) =>
             i === clicked
               // MOZYQ
-              ? <Mozyq key={i} main={name} >
+              ? <Mozyq key={i} main={name} zoom={false} x={0} y={0} transition={false}>
                 {
                   data.current![name].map((tt, ii) =>
                     <img
                       key={ii}
                       className="tile"
-                      src={`normalized/${tt}.avif`}
+                      src={`norm/${tt}.small.avif`}
                       alt=""
                     />
                   )
@@ -82,7 +84,7 @@ export default function App() {
               : <img
                 key={i}
                 className="tile"
-                src={`normalized/${name}.avif`}
+                src={`norm/${name}.small.avif`}
                 onClick={
                   clicked === -1
                     ? () => onClick(i)

@@ -1,26 +1,27 @@
-import { Children, type ReactNode, type RefObject } from "react"
+import { Children, type ReactNode } from "react"
 
 interface Props {
     main: string
+    zoom: boolean
+    x: number
+    y: number
+    transition: boolean
     children: ReactNode
-    ref?: RefObject<HTMLDivElement | null>
 }
 
-export default function Mozyq({ main, children, ref }: Props) {
+export default function Mozyq({ main, zoom, x, y, transition, children }: Props) {
     const n = Math.round(Math.sqrt(Children.count(children)))
+    const ox = (x + x / (n - 1)) * (100 / n)
+    const oy = (y + y / (n - 1)) * (100 / n)
 
     return <div
-        ref={ref}
-        className="mozyq"
+        className={["mozyq", transition ? '' : 'no-transition'].join(' ')}
         style={{
-            transformOrigin: 'top left',
-            transform: `scale(${1 / n})`
+            transformOrigin: `${ox}% ${oy}%`,
+            transform: `scale(${zoom ? n : 1})`,
         }}
     >
-        <img className="main" src={`normalized/${main}.avif`} style={{
-            transformOrigin: 'top left',
-            transform: `scale(${n})`
-        }} />
+        <img className="main" src={`norm/${main}.avif`} />
 
         <div className="grid" style={{
             gridTemplateColumns: `repeat(${n}, 1fr)`,

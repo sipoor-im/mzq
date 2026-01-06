@@ -3,3 +3,4 @@ normalized
 output.json
 dist
 .vscode
+public/norm
