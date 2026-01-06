@@ -43,7 +43,7 @@ main {
   height: 100%;
   will-change: transform;
   backface-visibility: hidden;
-  transition: transform 1s ease-in;
+  transition: transform 1.9s ease-in;
 }
 
 .mozyq.no-transition {
@@ -67,6 +67,7 @@ img {
 }
 
 .tile {
+  z-index: 1;
   opacity: .4;
   transition: opacity .3s ease-in-out;
 }
@@ -76,5 +77,6 @@ img {
 }
 
 .grid:hover .tile:hover {
+  z-index: 2;
   opacity: .9;
 }

@@ -56,7 +56,7 @@ export default function App() {
       setTimeout(() => {
         setTransition(true)
       }, 100)
-    }, 1_000)
+    }, 2_000)
   }
 
   if (prog < 100) return <main style={{ color: 'white' }}>Loading... {prog.toFixed(2)}%</main>

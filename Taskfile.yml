@@ -20,5 +20,7 @@ tasks:
         done
 
   mzq:
+    deps:
+      - small.avif
     cmds:
       - mzq json-full --grid-size 16 ~/cartoon/ public/output.json
