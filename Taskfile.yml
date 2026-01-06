@@ -18,3 +18,7 @@ tasks:
             echo "Skipping $f (already exists)"
           fi
         done
+
+  mzq:
+    cmds:
+      - mzq json-full --grid-size 16 ~/cartoon/ public/output.json
