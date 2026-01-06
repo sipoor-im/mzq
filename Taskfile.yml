@@ -1,0 +1,20 @@
+version: "3"
+
+tasks:
+  small.avif:
+    desc: "Generate small thumbnails for AVIF images"
+    cmds:
+      - cp ~/cartoon/*.avif public/norm/
+      - |
+        # Use find to locate avif files, excluding existing small ones
+        find . -name "*.avif" ! -name "*small.avif" | while read -r f; do
+          # Bash way to change extension: removes .avif and appends .small.avif
+          output="${f%.avif}.small.avif"
+          
+          if [ ! -f "$output" ]; then
+            echo "Processing $f..."
+            convert "$f" -resize 64x "$output"
+          else
+            echo "Skipping $f (already exists)"
+          fi
+        done
