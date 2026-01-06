@@ -30,6 +30,7 @@ main {
   width: min(100vh, 100vw, 1024px);
   aspect-ratio: 1;
   cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .container.zooming {
